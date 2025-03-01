@@ -1,0 +1,42 @@
+# Working with Data
+
+```{r}
+library(tidyverse)
+library(descr)
+library(knitr)
+library(dplyr)
+library(readr)
+```
+
+```{r}
+file_path <- "/cloud/project/Data/data.csv"
+```
+
+```{r}
+data.csv <- read_csv(file_path)
+```
+
+```{r}
+head(data.csv)
+
+```
+
+```{r}
+colnames(data)
+```
+
+```{r}
+summary(data)
+```
+
+```{r}
+glimpse(data)
+```
+
+```{r}
+freq(as.ordered(data$gender_pctm),plot = FALSE)
+freq(as.ordered(data$age_4cat),plot = FALSE)
+freq(as.ordered(data$nshift_status_pctn),plot = FALSE)
+```
+
+The frequency tables display the distribution of gender_pctm, age_4cat, and nshift_status_pctn. Each category has an equal 25% frequency, indicating an even distribution across the four recorded values. The age_4cat table groups individuals into four age ranges (18-23, 24-28, 29-38, and 39-60), while the gender_pctm table shows different percentage values of male respondents. The nshift_status_pctn table reflects the percentage of night shifts worked within each category.
