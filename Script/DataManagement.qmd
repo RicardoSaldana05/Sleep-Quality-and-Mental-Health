@@ -1,0 +1,132 @@
+# Data Management
+
+```{r}
+library(tidyverse)
+library(descr)
+library(knitr)
+library(dplyr)
+library(tidyr)
+
+```
+
+```{r}
+file_path <- file.path("/cloud/project/Data/mydata.csv")
+
+
+```
+
+```{r}
+mydata.csv <- read_csv(file_path)
+```
+
+```{r}
+head(mydata.csv)
+
+```
+
+```{r}
+colnames(mydata.csv)
+```
+
+```{r}
+summary(mydata.csv)
+```
+
+1.  
+
+    ```         
+    data <- read.csv("Data/data.csv", stringsAsFactors = FALSE)
+    ```
+
+```{r}
+glimpse(mydata.csv)
+```
+
+# **Working with Data**
+
+```{r}
+freq(as.ordered(mydata.csv$serious_mental_illness),plot = FALSE)
+```
+
+Most of the people in the dataset (92%) are recorded as having a serious mental illness. Only about 7.5% are not, and less than 1% are unknown. Since nearly everyone in the dataset has some form of serious mental illness, it makes sense to look at how this affects things like employment especially when race is also factored in.
+
+```{r}
+freq(as.ordered(mydata.csv$employment_status),plot = FALSE)
+```
+
+The majority of individuals in the dataset (about 62%) are not in the labor force and not looking for work. Around 20% are employed, and 10% are unemployed but actively job hunting. A small number are doing unpaid or volunteer work, and about 7% have an unknown employment status. This spread gives a good picture of how connected people in the sample are to the workforce which is important when looking at how mental health might affect job status.
+
+```{r}
+freq(as.ordered(mydata.csv$race),plot = FALSE)
+```
+
+Almost half of the sample identifies as White only (47.8%), followed by Black only at about 25%. About 18.5% fall into an “Other” category, while multi-racial and unknown make up the rest. Knowing the racial breakdown is useful for the research question since we’re trying to understand how mental health and employment might look different across racial groups.
+
+```{r}
+head(mydata.csv)
+```
+
+# **Univariate Data Visualization**
+
+```{r}
+
+ggplot(data, aes(x = age_group)) +
+  geom_bar(fill = "skyblue", color = "black") +
+  ggtitle("Distribution of Age Groups") +
+  xlab("Age Group") +
+  ylab("Count") +
+  theme_minimal() 
+```
+
+This bar chart shows the distribution of individuals by age group. The modal category is ADULT, making up the largest portion of the sample. The least common category is CHILD. This tells us that the dataset primarily includes adults, with a much smaller representation of children.
+
+```{r}
+data %>%
+  ggplot(aes(x = race)) +
+  geom_bar(fill = "lightblue", color = "black") + 
+  ggtitle("Distribution of Race") +
+  xlab("Race") +
+  ylab("Count") +
+  theme_minimal() 
+```
+
+This graph displays the distribution of individuals by race. The most frequent category is "WHITE ONLY", followed by "BLACK ONLY" while the least common is MULTI-RACIAL. This suggests the dataset has greater representation from individuals who identify as White or Black, with smaller proportions from other or multi-racial backgrounds.
+
+# **Bivariate Data Visualization**
+
+```{r}
+data$employment_status <- str_wrap(data$employment_status, width = 15)
+
+ggplot(data, aes(x = employment_status, fill = serious_mental_illness)) +
+  geom_bar(position = "fill", color = "black") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  ggtitle("Proportion of Serious Mental Illness by Employment Status") +
+  xlab("Employment Status") +
+  ylab("Percentage") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+This graph shows the relationship between employment status and serious mental illness. Each bar represents a different employment group and is divided by the percentage of individuals who reported having a serious mental illness (YES), not having one (NO), or having an unknown status. Across all employment categories the modal response is “YES,” indicating that serious mental illness is the most common outcome in the dataset. The least common response in all groups is “UNKNOWN.” The highest proportion of serious mental illness appears among those who are not in the labor force and not looking for work, while the lowest is among those who are employed. This pattern suggests that being disconnected from the workforce may be associated with more serious mental health challenges
+
+```{r}
+ggplot(data, aes(x = sex, fill = age_group)) +
+  geom_bar(position = "fill", color = "black") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  ggtitle("Age Group Distribution by Sex") +
+  xlab("Sex") +
+  ylab("Percentage") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+ggplot(data, aes(x = race, fill = age_group)) +
+  geom_bar(position = "fill", color = "black") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  ggtitle("Age Group Distribution by Race") +
+  xlab("Race") +
+  ylab("Percentage") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
